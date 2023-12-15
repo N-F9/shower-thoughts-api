@@ -59,7 +59,7 @@ public class App {
 			}
 		};
 		ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
-		exec.scheduleAtFixedRate(runnable , 0, 1, TimeUnit.MINUTES);
+		exec.scheduleAtFixedRate(runnable , 0, 90, TimeUnit.SECONDS);
 	}
 
 	public static void getPosts() throws SQLException, MalformedURLException, IOException, ParseException {
