@@ -37,6 +37,11 @@ public class ThoughtsController {
 		return it.next();
 	}
 
+	@GetMapping("/thoughts/count")
+	public long getCount() {
+		return this.thoughtsRepository.count();
+	}
+
   @GetMapping("/thoughts")
   public Iterable<Thoughts> findAllThoughts(
 		@RequestParam(value = "author", defaultValue = "", required = true) String author,
