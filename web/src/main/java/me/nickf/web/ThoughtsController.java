@@ -19,8 +19,22 @@ public class ThoughtsController {
 	}
 
 	@GetMapping("/thoughts/{id}")
-	public Optional<Thoughts> getMethodName(@PathVariable(value = "id") String id) {
+	public Optional<Thoughts> getThoughtById(@PathVariable(value = "id") String id) {
 		return this.thoughtsRepository.findById(id);
+	}
+
+	@GetMapping("/thoughts/random")
+	public Thoughts getThoughtByRandom() {
+		Iterator<Thoughts> it = this.thoughtsRepository.findAll().iterator();
+		long c = this.thoughtsRepository.count();
+		long r = (long) (Math.random() * c);
+
+		while(r > 0) {
+			it.next();
+			r--;
+		}
+		
+		return it.next();
 	}
 
   @GetMapping("/thoughts")
