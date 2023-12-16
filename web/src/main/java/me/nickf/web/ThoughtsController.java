@@ -21,7 +21,7 @@ public class ThoughtsController {
 		this.thoughtsRepository = thoughtsRepository;
 	}
 
-	@GetMapping("/thoughts/{id}")
+	@GetMapping("/api/thoughts/{id}")
 	public ResponseEntity<Object> getThoughtById(@PathVariable(value = "id") String id) {
 		Optional<Thoughts> thought = this.thoughtsRepository.findById(id);
 		
@@ -35,7 +35,7 @@ public class ThoughtsController {
 		return new ResponseEntity<>(thought, HttpStatus.OK);
 	}
 
-	@GetMapping("/thoughts/random")
+	@GetMapping("/api/thoughts/random")
 	public Thoughts getThoughtByRandom() {
 		Iterator<Thoughts> it = this.thoughtsRepository.findAll().iterator();
 		long c = this.thoughtsRepository.count();
@@ -49,12 +49,12 @@ public class ThoughtsController {
 		return it.next();
 	}
 
-	@GetMapping("/thoughts/count")
+	@GetMapping("/api/thoughts/count")
 	public long getCount() {
 		return this.thoughtsRepository.count();
 	}
 
-  @GetMapping("/thoughts")
+  @GetMapping("/api/thoughts")
   // public Iterable<Thoughts> findAllThoughts(
 	public ResponseEntity<Object> findAllThoughts(
 		@RequestParam(value = "author", defaultValue = "", required = true) String author,
