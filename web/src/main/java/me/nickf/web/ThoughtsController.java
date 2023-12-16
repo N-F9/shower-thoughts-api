@@ -97,7 +97,6 @@ public class ThoughtsController {
 	}
 
   @GetMapping("/api/thoughts")
-  // public Iterable<Thoughts> findAllThoughts(
 	public ResponseEntity<Object> findAllThoughts(
 		@RequestParam(value = "author", defaultValue = "", required = true) String author,
 		@RequestParam(value = "over_18", defaultValue = "false", required = true) String over_18,

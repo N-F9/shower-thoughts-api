@@ -5,7 +5,9 @@ spring:
     password: <YOUR_PASSWORD>
   jpa:
     hibernate:
-      ddl-auto: create-drop # <create | create-drop | update | validate | none>
+      ddl-auto: validate # <create | create-drop | update | validate | none>
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port : 8027
