@@ -35,19 +35,60 @@ public class ThoughtsController {
 		return new ResponseEntity<>(thought, HttpStatus.OK);
 	}
 
-	// add options
 	@GetMapping("/api/thoughts/random")
-	public Thoughts getThoughtByRandom() {
-		Iterator<Thoughts> it = this.thoughtsRepository.findAll().iterator();
-		long c = this.thoughtsRepository.count();
-		long r = (long) (Math.random() * c);
-
-		while(r > 0) {
-			it.next();
-			r--;
+	public ResponseEntity<Object> getThoughtByRandom(
+		@RequestParam(value = "author", defaultValue = "", required = true) String author,
+		@RequestParam(value = "over_18", defaultValue = "false", required = true) String over_18,
+		@RequestParam(value = "from", defaultValue = "", required = true) String from,
+		@RequestParam(value = "to", defaultValue = "", required = true) String to
+	) {
+		over_18 = over_18.toLowerCase();
+		if (!(over_18.equals("true") || over_18.equals("false"))) {
+			HashMap<String, String> m = new HashMap<>();
+			m.put("code", "422");
+			m.put("message", "The over_18 parameter is invalid. Please either use 'true' or 'false'.");
+			return new ResponseEntity<>(m, HttpStatus.UNPROCESSABLE_ENTITY);
 		}
-		
-		return it.next();
+
+		Date fromDate = null;
+		Date toDate = null;
+
+		if (!from.equals("")) {
+			try {
+				fromDate = Date.valueOf(from);
+			} catch (Exception e) {
+				HashMap<String, String> m = new HashMap<>();
+				m.put("code", "422");
+				m.put("message", "The from date is in an invalid format. (YYYY-MM-DD)");
+				return new ResponseEntity<>(m, HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+		}
+
+		if (!to.equals("")) {
+			try {
+				toDate = Date.valueOf(to);
+			} catch (Exception e) {
+				HashMap<String, String> m = new HashMap<>();
+				m.put("code", "422");
+				m.put("message", "The to date is in an invalid format. (YYYY-MM-DD)");
+				return new ResponseEntity<>(m, HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+		}
+
+		if (fromDate != null && toDate != null && fromDate.compareTo(toDate) > 0) {
+			HashMap<String, String> m = new HashMap<>();
+			m.put("code", "422");
+			m.put("message", "The to date must be later than or equal to the from date.");
+			return new ResponseEntity<>(m, HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+
+		ArrayList<Thoughts> thoughts = getThoughts(author, over_18, fromDate, toDate, -1);
+		int r = (int) (Math.random() * thoughts.size());
+
+		if(thoughts.size() > 0) {
+			return new ResponseEntity<>(thoughts.get(r), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new HashMap<>(), HttpStatus.OK);
 	}
 
 	@GetMapping("/api/thoughts/count")
@@ -117,11 +158,14 @@ public class ThoughtsController {
 			return new ResponseEntity<>(m, HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 
+		return new ResponseEntity<>(getThoughts(author, over_18, fromDate, toDate, limitInt), HttpStatus.OK);
+  }
+
+	public ArrayList<Thoughts> getThoughts(String author, String over_18, Date from, Date to, int limit) {
 		ArrayList<Thoughts> t = new ArrayList<>();
 		Iterator<Thoughts> it = this.thoughtsRepository.findAllByOrderByCreatedDesc().iterator();
 
-
-		while(it.hasNext() && t.size() < limitInt) {
+		while(it.hasNext() && (limit == -1 || t.size() < limit)) {
 			Thoughts thought = it.next();
 
 			if (!author.equals("") && !author.equals(thought.getAuthor())) {
@@ -134,20 +178,20 @@ public class ThoughtsController {
 
 			Date td = thought.getCreated();
 
-			if (fromDate != null && toDate != null) {
-				if (!(fromDate.compareTo(td) <= 0 && toDate.compareTo(td) >= 0)) {
+			if (from != null && to != null) {
+				if (!(from.compareTo(td) <= 0 && to.compareTo(td) >= 0)) {
 					continue;
 				}
 			}
 
-			if (fromDate != null && toDate == null) {
-				if (!(fromDate.compareTo(td) <= 0)) {
+			if (from != null && to == null) {
+				if (!(from.compareTo(td) <= 0)) {
 					continue;
 				}
 			}
 
-			if (fromDate == null && toDate != null) {
-				if (!(toDate.compareTo(td) >= 0)) {
+			if (from == null && to != null) {
+				if (!(to.compareTo(td) >= 0)) {
 					continue;
 				}
 			}
@@ -155,6 +199,6 @@ public class ThoughtsController {
 			t.add(thought);
 		}
 
-		return new ResponseEntity<>(t, HttpStatus.OK);
-  }
+		return t;
+	}
 }

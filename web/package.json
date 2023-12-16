@@ -5,7 +5,7 @@
     "rest": "^2.0.0"
   },
   "scripts": {
-		"webpack": "webpack --watch",
+    "webpack": "webpack --watch",
     "watch": "webpack --watch -d --output ./target/classes/static/built/bundle.js"
   },
   "devDependencies": {
