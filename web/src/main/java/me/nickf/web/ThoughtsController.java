@@ -35,6 +35,7 @@ public class ThoughtsController {
 		return new ResponseEntity<>(thought, HttpStatus.OK);
 	}
 
+	// add options
 	@GetMapping("/api/thoughts/random")
 	public Thoughts getThoughtByRandom() {
 		Iterator<Thoughts> it = this.thoughtsRepository.findAll().iterator();
