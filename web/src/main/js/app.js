@@ -41,7 +41,7 @@ class App extends React.Component {
 		return (
 			<div style={{textAlign: 'center'}}>
 				<h1>🚿 Shower Thoughts</h1>
-				<p><a target="_blank" href='https://docs.nickf.me/projects/shower%20thoughts/'>API Documentation</a></p>
+				<p><a target="_blank" href='https://docs.nickf.me/projects/shower%20thoughts/'>API Documentation</a> | <a target="_blank" href="https://github.com/N-F9/shower-thoughts-api">Github</a></p>
 				<div style={{
 					position: 'absolute',
 					top: '50%',
