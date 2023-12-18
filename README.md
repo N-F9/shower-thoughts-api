@@ -1,4 +1,9 @@
-TODO
+# 🚿 Shower Thoughts
+
+[Shower Thoughts](https://showerthoughts.nickf.me/) is an API that gives easily accessible thoughts from [r/showerthoughts](https://reddit.com/r/showerthoughts). The documentation can be found on my [docs page](https://docs.nickf.me/projects/shower%20thoughts/).
+
+
+<!-- TODO
 
 v 0.1
 - [x] handle special cases for API
@@ -6,10 +11,10 @@ v 0.1
 - [x] documentation on docs.nickf.me
 - [x] clean up
 - [x] hosting on homelab and postgre setup
-- [ ] readme
+- [x] readme
 
 v 0.2
-- [ ] report function
+- [ ] report function -->
 
 <!-- cd /home/nick/shower-thoughts-api/data/
 sudo nohup java -jar data.jar > /home/nick/logs/showerthoughts-data.log 2>&1 &
