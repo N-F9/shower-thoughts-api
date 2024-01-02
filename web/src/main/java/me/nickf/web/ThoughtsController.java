@@ -91,6 +91,7 @@ public class ThoughtsController {
 		return new ResponseEntity<>(new HashMap<>(), HttpStatus.OK);
 	}
 
+	// potentially count by certain parameters
 	@GetMapping("/api/thoughts/count")
 	public long getCount() {
 		return this.thoughtsRepository.count();
