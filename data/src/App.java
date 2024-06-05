@@ -97,7 +97,9 @@ public class App {
 			}
 			conn.close();
 		} catch (Exception e) {
+			System.out.println(e);
 			conn.close();
+			throw e;
 		}
 	}
 
