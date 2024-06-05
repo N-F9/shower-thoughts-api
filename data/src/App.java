@@ -69,33 +69,36 @@ public class App {
 		// props.setProperty("ssl", "true");
 		Connection conn = DriverManager.getConnection(url, props);
 		
-		String stringJson = stream(new URL("https://www.reddit.com/r/Showerthoughts/new.json?limit=10"));
-		JSONParser parser = new JSONParser();  
-		JSONObject json = (JSONObject) parser.parse(stringJson); 
-		JSONArray children = (JSONArray) ((JSONObject) json.get("data")).get("children"); 
-		for (int i = 0; i < children.size(); i++) {
-			JSONObject child = (JSONObject) ((JSONObject) children.get(i)).get("data");
-			
-			PreparedStatement stc = conn.prepareStatement("SELECT COUNT(1) FROM thoughts WHERE id = ?;");
-			stc.setString(1, (String) child.get("id"));
+		try {
+			String stringJson = stream(new URL("https://www.reddit.com/r/Showerthoughts/new.json?limit=10"));
+			JSONParser parser = new JSONParser();  
+			JSONObject json = (JSONObject) parser.parse(stringJson); 
+			JSONArray children = (JSONArray) ((JSONObject) json.get("data")).get("children"); 
+			for (int i = 0; i < children.size(); i++) {
+				JSONObject child = (JSONObject) ((JSONObject) children.get(i)).get("data");
+				
+				PreparedStatement stc = conn.prepareStatement("SELECT COUNT(1) FROM thoughts WHERE id = ?;");
+				stc.setString(1, (String) child.get("id"));
 
-			ResultSet rsc = stc.executeQuery();
+				ResultSet rsc = stc.executeQuery();
 
-			if(rsc.next() && !rsc.getBoolean(1)) {
-				PreparedStatement st = conn.prepareStatement("INSERT INTO thoughts VALUES (?, ?, ?, ?, ?, ?);");
+				if(rsc.next() && !rsc.getBoolean(1)) {
+					PreparedStatement st = conn.prepareStatement("INSERT INTO thoughts VALUES (?, ?, ?, ?, ?, ?);");
 
-				st.setString(1, (String) child.get("title"));
-				st.setDate(2, new java.sql.Date((long) ((double) child.get("created") * 1000)));
-				st.setBoolean(3, (boolean) child.get("over_18"));
-				st.setString(4, (String) child.get("id"));
-				st.setString(5, (String) child.get("author"));
-				st.setString(6, (String) child.get("permalink"));
+					st.setString(1, (String) child.get("title"));
+					st.setDate(2, new java.sql.Date((long) ((double) child.get("created") * 1000)));
+					st.setBoolean(3, (boolean) child.get("over_18"));
+					st.setString(4, (String) child.get("id"));
+					st.setString(5, (String) child.get("author"));
+					st.setString(6, (String) child.get("permalink"));
 
-				st.execute();
+					st.execute();
+				}
 			}
+			conn.close();
+		} catch (Exception e) {
+			conn.close();
 		}
-
-		conn.close();
 	}
 
 	public static String stream(URL url) throws IOException {
