@@ -19,33 +19,32 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.*;
 
 public class App {
-	public static String url = "jdbc:postgresql://localhost/showerthoughts";
+	public static String url = "jdbc:postgresql://localhost:5432/showerthoughts";
 	public static String user = "postgres";
 	public static String password = System.getenv("password");
 
 	public static void main(String[] args) throws Exception {
 		Dotenv dotenv = Dotenv.load();
 		password = dotenv.get("password");
-		
+
 		Properties props = new Properties();
 		props.setProperty("user", user);
 		props.setProperty("password", password);
-		// props.setProperty("ssl", "true");
 		Connection conn = DriverManager.getConnection(url, props);
-		
-		PreparedStatement st = conn.prepareStatement("CREATE TABLE IF NOT EXISTS thoughts ("+
-			"title varchar(255)," +
-			"created date," +
-			"over_18 boolean," +
-			"id varchar(255) UNIQUE," +
-			"author varchar(255)," +
-			"permalink varchar(255)" +
-		");");
+
+		PreparedStatement st = conn.prepareStatement("CREATE TABLE IF NOT EXISTS thoughts (" +
+				"title varchar(255)," +
+				"created date," +
+				"over_18 boolean," +
+				"id varchar(255) UNIQUE," +
+				"author varchar(255)," +
+				"permalink varchar(255)" +
+				");");
 
 		st.execute();
 
 		conn.close();
-		
+
 		Runnable runnable = new Runnable() {
 			public void run() {
 				try {
@@ -59,30 +58,29 @@ public class App {
 			}
 		};
 		ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
-		exec.scheduleAtFixedRate(runnable , 0, 90, TimeUnit.SECONDS);
+		exec.scheduleAtFixedRate(runnable, 0, 90, TimeUnit.SECONDS);
 	}
 
 	public static void getPosts() throws SQLException, MalformedURLException, IOException, ParseException {
 		Properties props = new Properties();
 		props.setProperty("user", user);
 		props.setProperty("password", password);
-		// props.setProperty("ssl", "true");
 		Connection conn = DriverManager.getConnection(url, props);
-		
+
 		try {
 			String stringJson = stream(new URL("https://www.reddit.com/r/Showerthoughts/new.json?limit=10"));
-			JSONParser parser = new JSONParser();  
-			JSONObject json = (JSONObject) parser.parse(stringJson); 
-			JSONArray children = (JSONArray) ((JSONObject) json.get("data")).get("children"); 
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(stringJson);
+			JSONArray children = (JSONArray) ((JSONObject) json.get("data")).get("children");
 			for (int i = 0; i < children.size(); i++) {
 				JSONObject child = (JSONObject) ((JSONObject) children.get(i)).get("data");
-				
+
 				PreparedStatement stc = conn.prepareStatement("SELECT COUNT(1) FROM thoughts WHERE id = ?;");
 				stc.setString(1, (String) child.get("id"));
 
 				ResultSet rsc = stc.executeQuery();
 
-				if(rsc.next() && !rsc.getBoolean(1)) {
+				if (rsc.next() && !rsc.getBoolean(1)) {
 					PreparedStatement st = conn.prepareStatement("INSERT INTO thoughts VALUES (?, ?, ?, ?, ?, ?);");
 
 					st.setString(1, (String) child.get("title"));

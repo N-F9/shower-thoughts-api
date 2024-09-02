@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 @Table(name = "thoughts")
 public class Thoughts {
 	@Id
-  public String id;
+	public String id;
 
 	public String title;
 	public boolean over_18;
@@ -18,7 +18,8 @@ public class Thoughts {
 	public String permalink;
 	public Date created;
 
-	private Thoughts() {}
+	private Thoughts() {
+	}
 
 	public Thoughts(String title, Date created, boolean over_18, String id, String author, String permalink) {
 		this.title = title;
@@ -55,7 +56,8 @@ public class Thoughts {
 
 	@Override
 	public String toString() {
-		return getTitle() + "\n" + getAuthor() + "\n" + getId() + "\n" + getOver_18() + "\n" + getCreated() + "\n" + getPermalink();
+		return getTitle() + "\n" + getAuthor() + "\n" + getId() + "\n" + getOver_18() + "\n" + getCreated() + "\n"
+				+ getPermalink();
 	}
-	
+
 }

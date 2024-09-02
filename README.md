@@ -14,6 +14,11 @@ v 0.1
 - [x] readme
 
 v 0.2
+- [x] code fixes and cleanup
+- [ ] fix build errors
+
+v 0.3
+- [ ] count endpoint with parameters
 - [ ] report function -->
 
 <!-- cd /home/nick/shower-thoughts-api/data/

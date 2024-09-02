@@ -24,8 +24,8 @@ public class ThoughtsController {
 	@GetMapping("/api/thoughts/{id}")
 	public ResponseEntity<Object> getThoughtById(@PathVariable(value = "id") String id) {
 		Optional<Thoughts> thought = this.thoughtsRepository.findById(id);
-		
-		if(thought.equals(Optional.empty())) {
+
+		if (thought.equals(Optional.empty())) {
 			HashMap<String, String> m = new HashMap<>();
 			m.put("code", "422");
 			m.put("message", "The id variable is invalid, please provide a valid id.");
@@ -37,11 +37,10 @@ public class ThoughtsController {
 
 	@GetMapping("/api/thoughts/random")
 	public ResponseEntity<Object> getThoughtByRandom(
-		@RequestParam(value = "author", defaultValue = "", required = true) String author,
-		@RequestParam(value = "over_18", defaultValue = "false", required = true) String over_18,
-		@RequestParam(value = "from", defaultValue = "", required = true) String from,
-		@RequestParam(value = "to", defaultValue = "", required = true) String to
-	) {
+			@RequestParam(value = "author", defaultValue = "", required = true) String author,
+			@RequestParam(value = "over_18", defaultValue = "false", required = true) String over_18,
+			@RequestParam(value = "from", defaultValue = "", required = true) String from,
+			@RequestParam(value = "to", defaultValue = "", required = true) String to) {
 		over_18 = over_18.toLowerCase();
 		if (!(over_18.equals("true") || over_18.equals("false"))) {
 			HashMap<String, String> m = new HashMap<>();
@@ -85,7 +84,7 @@ public class ThoughtsController {
 		ArrayList<Thoughts> thoughts = getThoughts(author, over_18, fromDate, toDate, -1);
 		int r = (int) (Math.random() * thoughts.size());
 
-		if(thoughts.size() > 0) {
+		if (thoughts.size() > 0) {
 			return new ResponseEntity<>(thoughts.get(r), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(new HashMap<>(), HttpStatus.OK);
@@ -97,14 +96,13 @@ public class ThoughtsController {
 		return this.thoughtsRepository.count();
 	}
 
-  @GetMapping("/api/thoughts")
+	@GetMapping("/api/thoughts")
 	public ResponseEntity<Object> findAllThoughts(
-		@RequestParam(value = "author", defaultValue = "", required = true) String author,
-		@RequestParam(value = "over_18", defaultValue = "false", required = true) String over_18,
-		@RequestParam(value = "from", defaultValue = "", required = true) String from,
-		@RequestParam(value = "to", defaultValue = "", required = true) String to,
-		@RequestParam(value = "limit", defaultValue = "10", required = true) String limit
-	) {
+			@RequestParam(value = "author", defaultValue = "", required = true) String author,
+			@RequestParam(value = "over_18", defaultValue = "false", required = true) String over_18,
+			@RequestParam(value = "from", defaultValue = "", required = true) String from,
+			@RequestParam(value = "to", defaultValue = "", required = true) String to,
+			@RequestParam(value = "limit", defaultValue = "10", required = true) String limit) {
 		over_18 = over_18.toLowerCase();
 		if (!(over_18.equals("true") || over_18.equals("false"))) {
 			HashMap<String, String> m = new HashMap<>();
@@ -123,8 +121,10 @@ public class ThoughtsController {
 			m.put("message", "The limit parameter is invalid. Please an integer ranging from 1 to 1000.");
 			return new ResponseEntity<>(m, HttpStatus.BAD_REQUEST);
 		}
-		if (limitInt < 1) limitInt = 1;
-		if (limitInt > 1000) limitInt = 1000;
+		if (limitInt < 1)
+			limitInt = 1;
+		if (limitInt > 1000)
+			limitInt = 1000;
 
 		Date fromDate = null;
 		Date toDate = null;
@@ -159,13 +159,13 @@ public class ThoughtsController {
 		}
 
 		return new ResponseEntity<>(getThoughts(author, over_18, fromDate, toDate, limitInt), HttpStatus.OK);
-  }
+	}
 
 	public ArrayList<Thoughts> getThoughts(String author, String over_18, Date from, Date to, int limit) {
 		ArrayList<Thoughts> t = new ArrayList<>();
 		Iterator<Thoughts> it = this.thoughtsRepository.findAllByOrderByCreatedDesc().iterator();
 
-		while(it.hasNext() && (limit == -1 || t.size() < limit)) {
+		while (it.hasNext() && (limit == -1 || t.size() < limit)) {
 			Thoughts thought = it.next();
 
 			if (!author.equals("") && !author.equals(thought.getAuthor())) {
