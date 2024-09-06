@@ -15,13 +15,17 @@ v 0.1
 
 v 0.2
 - [x] code fixes and cleanup
-- [ ] fix build errors
+- [x] fix build errors
 
 v 0.3
 - [ ] count endpoint with parameters
 - [ ] report function -->
 
-<!-- cd /home/nick/shower-thoughts-api/data/
+<!-- 
+for building:
+mvn clean package
+
+cd /home/nick/shower-thoughts-api/data/
 sudo nohup java -jar data.jar > /home/nick/logs/showerthoughts-data.log 2>&1 &
 cd /home/nick/shower-thoughts-api/web/
 sudo nohup java -jar web-0.0.1-SNAPSHOT.jar > /home/nick/logs/showerthoughts-web.log 2>&1 &
