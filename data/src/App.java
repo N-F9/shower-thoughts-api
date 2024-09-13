@@ -83,6 +83,10 @@ public class App {
 				if (rsc.next() && !rsc.getBoolean(1)) {
 					PreparedStatement st = conn.prepareStatement("INSERT INTO thoughts VALUES (?, ?, ?, ?, ?, ?);");
 
+					if(((String) child.get("title")).length() > 255) {
+						continue;
+					}
+
 					st.setString(1, (String) child.get("title"));
 					st.setDate(2, new java.sql.Date((long) ((double) child.get("created") * 1000)));
 					st.setBoolean(3, (boolean) child.get("over_18"));
