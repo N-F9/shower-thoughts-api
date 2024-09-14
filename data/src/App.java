@@ -4,6 +4,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,11 +18,8 @@ import java.util.concurrent.TimeUnit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import io.github.cdimascio.dotenv.Dotenv;
-
-import java.sql.*;
 
 public class App {
 	public static String url = "jdbc:postgresql://localhost:5432/showerthoughts";
@@ -58,7 +61,7 @@ public class App {
 			}
 		};
 		ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
-		exec.scheduleAtFixedRate(runnable, 0, 90, TimeUnit.SECONDS);
+		exec.scheduleAtFixedRate(runnable, 0, 60 * 2, TimeUnit.SECONDS);
 	}
 
 	public static void getPosts() throws SQLException, MalformedURLException, IOException, ParseException {
@@ -68,7 +71,7 @@ public class App {
 		Connection conn = DriverManager.getConnection(url, props);
 
 		try {
-			String stringJson = stream(new URL("https://www.reddit.com/r/Showerthoughts/new.json?limit=10"));
+			String stringJson = stream(new URL("https://www.reddit.com/r/Showerthoughts/new.json?limit=100"));
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(stringJson);
 			JSONArray children = (JSONArray) ((JSONObject) json.get("data")).get("children");
@@ -101,7 +104,7 @@ public class App {
 		} catch (Exception e) {
 			System.out.println(e);
 			conn.close();
-			throw e;
+			// throw e;
 		}
 	}
 
