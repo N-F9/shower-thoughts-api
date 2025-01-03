@@ -22,8 +22,8 @@ import org.json.simple.parser.JSONParser;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class App {
-	public static String url = System.getenv("url");
-	public static String user = System.getenv("user");
+	public static String url = "jdbc:postgresql://db:5432/web_database";
+	public static String user = "postgres";
 	public static String password = System.getenv("password");
 
 	public static void main(String[] args) throws Exception {
