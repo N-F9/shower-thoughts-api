@@ -6,8 +6,8 @@ services:
     volumes:
       - 'postgresql-data-shower-thoughts:/var/lib/postgresql/data'
     environment:
-      - POSTGRES_USER=${SERVICE_USER_POSTGRES}
-      - POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES}
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=data_database
     healthcheck:
       test:
@@ -22,10 +22,6 @@ services:
       context: ./data
       dockerfile: Dockerfile
     container_name: data_service
-    environment:
-      - url=jdbc:postgres://$SERVICE_USER_POSTGRES:$SERVICE_PASSWORD_POSTGRES@postgresql:5432/$POSTGRES_DB
-      - user=${SERVICE_USER_POSTGRES}
-      - password=${SERVICE_PASSWORD_POSTGRES}
     depends_on:
       - db
   web_service:
@@ -33,10 +29,6 @@ services:
       context: ./web
       dockerfile: Dockerfile
     container_name: web_service
-    environment:
-      - url=jdbc:postgres://$SERVICE_USER_POSTGRES:$SERVICE_PASSWORD_POSTGRES@postgresql:5432/$POSTGRES_DB
-      - user=${SERVICE_USER_POSTGRES}
-      - password=${SERVICE_PASSWORD_POSTGRES}
     depends_on:
       - db
       - data_service

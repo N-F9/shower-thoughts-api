@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: dbc:postgresql://localhost:5432/data_database
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate # <create | create-drop | update | validate | none>
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port : 8027

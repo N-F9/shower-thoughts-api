@@ -5,8 +5,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy the JAR file and .env file
-COPY web-0.0.2.jar /app/web.jar
-COPY .env /.env
+COPY * /app/*
 
 # Expose the application port (adjust as needed)
 EXPOSE 8027
