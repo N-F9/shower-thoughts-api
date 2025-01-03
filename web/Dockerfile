@@ -8,7 +8,7 @@ WORKDIR /app
 COPY web-0.0.2.jar /app/web.jar
 
 # Expose the application port (adjust as needed)
-EXPOSE 8080
+EXPOSE 8027
 
 # Command to run the JAR
 CMD ["java", "-jar", "/app/web.jar"]
