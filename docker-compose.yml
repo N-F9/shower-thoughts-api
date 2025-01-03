@@ -41,7 +41,7 @@ services:
       - db
       - data_service
     ports:
-      - "8080:8080"
+      - "8027:8027"
 
 volumes:
   postgres_data:
