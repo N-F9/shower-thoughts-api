@@ -1,0 +1,47 @@
+version: '0.2'
+
+services:
+  db:
+    image: 'postgres:16-alpine'
+    volumes:
+      - 'postgresql-data-shower-thoughts:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_USER=$user
+      - POSTGRES_PASSWORD=$password
+      - POSTGRES_DB=data_database
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'
+      interval: 5s
+      timeout: 20s
+      retries: 10
+
+  data_service:
+    build:
+      context: ./data
+      dockerfile: Dockerfile
+    container_name: data_service
+    environment:
+      - url=jdbc:postgresql://db:5432/data_database
+      - user=$user
+      - password=$password
+    depends_on:
+      - db
+  web_service:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: web_service
+    environment:
+      - url=jdbc:postgresql://db:5432/data_database
+      - user=$user
+      - password=$password
+    depends_on:
+      - db
+      - data_service
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
