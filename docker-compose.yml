@@ -6,8 +6,8 @@ services:
     volumes:
       - 'postgresql-data-shower-thoughts:/var/lib/postgresql/data'
     environment:
-      - POSTGRES_USER=$user
-      - POSTGRES_PASSWORD=$password
+      - POSTGRES_USER=${user}
+      - POSTGRES_PASSWORD=${password}
       - POSTGRES_DB=data_database
     healthcheck:
       test:
@@ -24,8 +24,8 @@ services:
     container_name: data_service
     environment:
       - url=jdbc:postgresql://db:5432/data_database
-      - user=$user
-      - password=$password
+      - user=${user}
+      - password=${password}
     depends_on:
       - db
   web_service:
@@ -35,8 +35,8 @@ services:
     container_name: web_service
     environment:
       - url=jdbc:postgresql://db:5432/data_database
-      - user=$user
-      - password=$password
+      - user=${user}
+      - password=${password}
     depends_on:
       - db
       - data_service
